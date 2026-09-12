@@ -28,7 +28,7 @@ Tuần qua, mình đã tự tay thiết kế và triển khai một hệ sinh th
 Dự án được cấu trúc theo chuẩn Clean Architecture (modular, typed hints, dockerized, .gitignore an toàn và đầy đủ unit test).
 
 👉 Toàn bộ mã nguồn và tài liệu chi tiết mình đã public trên GitHub tại đây:
-[Link GitHub Repo của bạn]
+https://github.com/trinhhieu102/llm-local
 
 Rất mong nhận được đóng góp ý kiến từ các anh chị và đồng nghiệp trong cộng đồng AI Engineering!
 

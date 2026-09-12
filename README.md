@@ -7,6 +7,7 @@
 [![CUDA](https://img.shields.io/badge/NVIDIA-CUDA_13.0-76B900?style=for-the-badge&logo=nvidia&logoColor=white)](https://developer.nvidia.com/cuda-toolkit)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector_Store-orange?style=for-the-badge)](https://trychroma.com)
+[![Author](https://img.shields.io/badge/Author-Trinh_Hieu-blue?style=for-the-badge&logo=github)](https://github.com/trinhhieu102)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 **A production-ready, 100% offline, privacy-first Retrieval-Augmented Generation (RAG) and Local LLM inference framework optimized for consumer-grade GPUs (4GB VRAM).**
@@ -112,8 +113,8 @@ flowchart TD
 ### 2. Installation
 ```powershell
 # Clone the repository
-git clone https://github.com/your-username/vietnamese-local-rag-llm.git
-cd vietnamese-local-rag-llm
+git clone https://github.com/trinhhieu102/llm-local.git
+cd llm-local
 
 # Create virtual environment
 python -m venv .venv
@@ -176,6 +177,7 @@ Dự án này là bộ khung (boilerplate) hoàn chỉnh chuẩn kỹ thuật d�
 
 ---
 
-## 📜 License
+## 📜 License & Author
 
-Distributed under the **MIT License**. See `LICENSE` for more information.
+* **Author:** Trinh Hieu ([@trinhhieu102](https://github.com/trinhhieu102))
+* **License:** Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
