@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  rag-api:
+    build: .
+    container_name: local-rag-api
+    ports:
+      - "8000:8000"
+    environment:
+      # Kết nối tới Ollama đang chạy trên máy chủ Host
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - LLM_MODEL=qwen2.5:3b
+      - EMBEDDING_MODEL=bge-m3
+      - CHUNK_SIZE=500
+      - CHUNK_OVERLAP=100
+      - TOP_K=3
+    volumes:
+      - ./data:/app/data
+      - ./chroma_data:/app/chroma_data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

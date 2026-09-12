@@ -1,0 +1,31 @@
+# Môi trường ảo Python
+.venv/
+venv/
+ENV/
+env/
+
+# Biến môi trường và bí mật
+.env
+.env.local
+
+# Cơ sở dữ liệu và cache vector
+chroma_data/
+*.sqlite3
+
+# Python bytecode và cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Tệp tạm của hệ thống và IDE
+.vscode/
+.idea/
+*.swp
+*.bak
+Thumbs.db
+Desktop.ini
+
+# Dữ liệu tài liệu cá nhân thử nghiệm (trừ tài liệu mẫu)
+data/*
+!data/tai_lieu_mau.txt

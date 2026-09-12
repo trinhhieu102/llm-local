@@ -1,0 +1,15 @@
+HƯỚNG DẪN VẬN HÀNH HỆ THỐNG LOCAL LLM NỘI BỘ
+
+1. GIỚI THIỆU TỔNG QUAN
+Hệ thống Local LLM nội bộ được triển khai trực tiếp trên máy trạm với cấu hình tối ưu gồm card đồ họa NVIDIA GeForce RTX 2050 (VRAM 4GB) và 16GB RAM hệ thống.
+Hệ thống sử dụng lõi suy luận Ollama chạy ở cổng mặc định 11434, tích hợp mô hình ngôn ngữ lớn Qwen 2.5 3B và mô hình vector nhúng BGE-M3.
+
+2. CÁC QUY ĐỊNH BẢO MẬT DỮ LIỆU
+- Tất cả dữ liệu truy vấn, tài liệu nạp vào và lịch sử hội thoại được xử lý 100% offline trên máy cục bộ, không gửi bất kỳ gói tin nào ra máy chủ bên ngoài.
+- Dữ liệu vector được lưu trữ an toàn trong thư mục chroma_data dưới định dạng sqlite3 và parquet.
+- Cổng 11434 chỉ mở trên địa chỉ 127.0.0.1 để ngăn chặn truy cập trái phép từ mạng nội bộ nếu chưa có sự cho phép của quản trị viên.
+
+3. HƯỚNG DẪN SỬ DỤNG VÀ THỜI GIAN PHẢN HỒI
+- Đối với mô hình Qwen 2.5 3B: Tốc độ sinh chữ đạt trung bình từ 40 đến 60 token mỗi giây do toàn bộ trọng số được nạp trọn vẹn vào 4GB VRAM của RTX 2050.
+- Đối với mô hình Qwen 2.5 7B: Tốc độ đạt khoảng 12 đến 18 token mỗi giây do cơ chế phân bổ kết hợp giữa GPU và RAM hệ thống.
+- Khi cần cập nhật thêm tài liệu mới, người dùng chỉ cần đặt file vào thư mục data và chạy lệnh nạp dữ liệu. Mã định danh tài liệu sẽ được đánh chỉ mục tự động.
