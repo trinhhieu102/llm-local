@@ -108,13 +108,16 @@ flowchart TD
 │   ├── __init__.py
 │   ├── config.py            # Centralized immutable settings dataclass
 │   ├── llm_client.py        # Resilient Ollama client (streaming, embedding, health)
-│   └── rag_engine.py        # Modular RAG pipeline (DocumentLoader, Splitter, ChromaDB)
+│   ├── rag_engine.py        # Modular Hybrid RAG pipeline (BM25 + BGE-M3 + RRF)
+│   └── crawler.py           # Web Topic Crawler & Fine-Tuning Dataset Generator
 ├── static/                  # Modern Web Studio UI (HTML5, Vanilla CSS, JS)
-│   ├── index.html           # SEO-optimized UI layout
+│   ├── index.html           # SEO-optimized UI layout with Crawler & Telemetry
 │   ├── css/style.css        # Premium Dark Glassmorphism styles
-│   ├── js/app.js            # SSE streaming, RAG citations & Drag-and-Drop
+│   ├── js/app.js            # SSE streaming, RAG citations, Crawler & Drag-and-Drop
 │   └── favicon.svg          # Brand vector icon
 └── docs/
+    ├── continue_config.json # Copy-paste VS Code Continue extension config
+    ├── vscode_extension_guide.md # Full guide for VS Code, LangChain & CrewAI
     └── linkedin_post.md     # Ready-to-publish LinkedIn project showcase
 ```
 
@@ -152,28 +155,36 @@ ollama pull bge-m3
 
 ### 4. Running the Application
 
-#### Option A: Interactive Terminal CLI
-```powershell
-python main.py
-```
-*Features rich interactive menu:*
-1. Direct Chat & Code Assistant (Streaming)
-2. Ingest Documents into Vector DB
-3. RAG Querying with Source Citations
-4. System Health & Model Verification
-
-#### Option B: Launch Modern Web Studio & FastAPI Server
+#### Option A: Launch Web Studio, OpenAI Gateway & Crawler
 ```powershell
 python api_server.py
 ```
-* **Modern Web Studio:** Mở trình duyệt tại `http://localhost:8000` (Giao diện Dark Mode, SSE streaming, RAG citations & Drag-and-Drop Ingestion)
+* **Modern Web Studio:** Mở trình duyệt tại `http://localhost:8000` (Dark Mode, Telemetry, Crawler widget, Settings modal).
+* **OpenAI-Compatible Gateway (`/v1`):** `http://localhost:8000/v1` kết nối trực tiếp với VS Code Continue, Cline, LangChain, AutoGen, CrewAI.
 * **Interactive Swagger Docs:** `http://localhost:8000/docs`
 * **Health Check:** `GET http://localhost:8000/health`
-* **RAG Query:** `POST http://localhost:8000/api/rag/query`
-* **Chat Stream:** `POST http://localhost:8000/api/chat`
-* **Documents List:** `GET http://localhost:8000/api/rag/documents`
+* **RAG Hybrid Query:** `POST http://localhost:8000/api/rag/query`
+* **Topic Crawler:** `POST http://localhost:8000/api/crawler/crawl`
 
-#### Option C: Docker Deployment
+#### Option B: Use as Copilot in VS Code (Continue.dev)
+1. Cài đặt extension **Continue** trên VS Code.
+2. Dán nội dung cấu hình từ [`docs/continue_config.json`](docs/continue_config.json) vào `%USERPROFILE%\.continue\config.json`.
+3. Nhấn `Ctrl + L` để chat hỏi code, `Ctrl + I` để inline edit, hoặc dùng phím `Tab` để autocomplete!
+*(Xem hướng dẫn chi tiết tại [`docs/vscode_extension_guide.md`](docs/vscode_extension_guide.md))*.
+
+#### Option C: Automated Topic Crawler (RAG & Fine-Tuning)
+```powershell
+# Cào tin tức công nghệ hot (AI, GPU, Bán dẫn), nạp RAG và tạo dataset train
+python src/crawler.py
+```
+* File dataset sinh ra tại `data/train_dataset.jsonl` sẵn sàng mang đi Fine-tune LoRA/QLoRA bằng Unsloth.
+
+#### Option D: Interactive Terminal CLI
+```powershell
+python main.py
+```
+
+#### Option E: Docker Deployment
 ```powershell
 docker compose up -d
 ```
