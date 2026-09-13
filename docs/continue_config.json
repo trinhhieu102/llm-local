@@ -1,0 +1,40 @@
+{
+  "models": [
+    {
+      "title": "Local Qwen 2.5 3B (FastAPI Gateway)",
+      "provider": "openai",
+      "model": "qwen2.5:3b",
+      "apiBase": "http://localhost:8000/v1",
+      "apiKey": "local-key-not-needed"
+    },
+    {
+      "title": "Local Qwen 2.5 3B (Ollama Direct)",
+      "provider": "ollama",
+      "model": "qwen2.5:3b",
+      "apiBase": "http://localhost:11434"
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Local Autocomplete",
+    "provider": "ollama",
+    "model": "qwen2.5:3b",
+    "apiBase": "http://localhost:11434"
+  },
+  "embeddingsProvider": {
+    "provider": "openai",
+    "model": "bge-m3",
+    "apiBase": "http://localhost:8000/v1"
+  },
+  "customCommands": [
+    {
+      "name": "test",
+      "prompt": "Viết unit test chi tiết cho đoạn code sau:",
+      "description": "Viết unit test"
+    },
+    {
+      "name": "refactor",
+      "prompt": "Tối ưu hóa hiệu năng và clean code cho đoạn code sau, giữ nguyên chức năng:",
+      "description": "Tối ưu code"
+    }
+  ]
+}

@@ -50,6 +50,14 @@
     docList: document.getElementById('docList'),
     btnRefreshDocs: document.getElementById('btnRefreshDocs'),
 
+    // Crawler
+    crawlerTopicSelect: document.getElementById('crawlerTopicSelect'),
+    chkAutoIngestRag: document.getElementById('chkAutoIngestRag'),
+    chkExportDataset: document.getElementById('chkExportDataset'),
+    btnRunCrawler: document.getElementById('btnRunCrawler'),
+    crawlerStatus: document.getElementById('crawlerStatus'),
+    crawlerStatusText: document.getElementById('crawlerStatusText'),
+
     // Sidebar Mobile
     sidebar: document.getElementById('sidebar'),
     btnMobileToggle: document.getElementById('btnMobileToggle'),
@@ -561,6 +569,72 @@
     }
   }
 
+  // --- Thu thập tin tức theo chủ đề (Web Topic Crawler) ---
+  async function runCrawler() {
+    if (!el.btnRunCrawler) return;
+
+    const topic = el.crawlerTopicSelect ? el.crawlerTopicSelect.value : 'ai';
+    const autoIngest = el.chkAutoIngestRag ? el.chkAutoIngestRag.checked : true;
+    const exportDataset = el.chkExportDataset ? el.chkExportDataset.checked : true;
+
+    if (!autoIngest && !exportDataset) {
+      alert('Vui lòng chọn ít nhất một chế độ: Nạp RAG hoặc Xuất file train!');
+      return;
+    }
+
+    el.btnRunCrawler.disabled = true;
+    el.crawlerStatus.style.display = 'flex';
+    el.crawlerStatusText.innerHTML = `Đang quét RSS (${topic}) và làm sạch dữ liệu...`;
+
+    try {
+      const res = await fetch('/api/crawler/crawl', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          topic: topic,
+          max_articles: 3,
+          auto_ingest_rag: autoIngest,
+          export_dataset: exportDataset,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.detail || 'Lỗi khi cào dữ liệu');
+      }
+
+      const result = await res.json();
+      if (result.status === 'empty') {
+        el.crawlerStatusText.innerHTML = `<span style="color: var(--accent-amber);">Không tìm thấy bài viết nào từ nguồn tin.</span>`;
+      } else {
+        let msg = `✓ Đã cào <strong>${result.articles_count}</strong> bài viết`;
+        if (result.chunks_ingested > 0) {
+          msg += `, nạp <strong>${result.chunks_ingested}</strong> chunks vào RAG!`;
+        }
+        if (result.dataset_file) {
+          msg += `<br>📁 Xuất train dataset: <code>train_dataset.jsonl</code>`;
+        }
+        el.crawlerStatusText.innerHTML = msg;
+
+        // Tự động làm mới danh sách tài liệu nếu có nạp RAG
+        if (result.chunks_ingested > 0) {
+          fetchDocuments();
+        }
+      }
+
+      setTimeout(() => {
+        el.crawlerStatus.style.display = 'none';
+        el.btnRunCrawler.disabled = false;
+      }, 5000);
+    } catch (err) {
+      el.crawlerStatusText.innerHTML = `<span style="color: var(--accent-rose);">✗ Lỗi: ${escapeHtml(err.message)}</span>`;
+      setTimeout(() => {
+        el.crawlerStatus.style.display = 'none';
+        el.btnRunCrawler.disabled = false;
+      }, 5000);
+    }
+  }
+
   // --- Đồng bộ cài đặt giữa state và giao diện ---
   function syncSettingsToUI() {
     if (el.sliderTemp) {
@@ -714,6 +788,11 @@
 
     // Refresh documents button
     el.btnRefreshDocs.addEventListener('click', fetchDocuments);
+
+    // Crawler button
+    if (el.btnRunCrawler) {
+      el.btnRunCrawler.addEventListener('click', runCrawler);
+    }
 
     // Mobile sidebar toggle
     if (el.btnMobileToggle) {
