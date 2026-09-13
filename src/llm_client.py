@@ -37,6 +37,7 @@ class OllamaClient:
         messages: List[Dict[str, str]],
         model: Optional[str] = None,
         system_prompt: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
     ) -> Generator[str, None, None]:
         """
         Chat ở chế độ Streaming (trả về từng token như ChatGPT).
@@ -45,6 +46,7 @@ class OllamaClient:
             messages: Danh sách tin nhắn dạng [{"role": "user", "content": "..."}]
             model: Tên model sử dụng (mặc định lấy từ cấu hình settings.llm_model)
             system_prompt: Lời nhắc định hình vai trò cho AI
+            options: Tham số cấu hình model (temperature, top_p, num_ctx, ...)
         """
         target_model = model or settings.llm_model
         chat_messages = []
@@ -55,11 +57,15 @@ class OllamaClient:
         chat_messages.extend(messages)
 
         try:
-            stream = self.client.chat(
-                model=target_model,
-                messages=chat_messages,
-                stream=True,
-            )
+            stream_kwargs = {
+                "model": target_model,
+                "messages": chat_messages,
+                "stream": True,
+            }
+            if options:
+                stream_kwargs["options"] = options
+
+            stream = self.client.chat(**stream_kwargs)
             for chunk in stream:
                 content = chunk.get("message", {}).get("content", "")
                 if content:
